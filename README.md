@@ -1,6 +1,6 @@
 # campfire.cr
 
-[Campfire](http://campfirenow.com/) command line client and library witten in [Crystal](http://crystal-lang.org)
+[Campfire](http://campfirenow.com/) command line client and library written in [Crystal](http://crystal-lang.org).
 
 A one evening hack, awful, buggy and incomplete.
 
