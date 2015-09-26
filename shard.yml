@@ -1,0 +1,7 @@
+name: campfire.cr
+version: 0.1.0
+
+authors:
+  - Sergio Rubio <rubiojr@frameos.org>
+
+license: MIT
