@@ -12,6 +12,8 @@ def usage
   puts "stalk        <room>             Join a room and listen."
   puts "transcript   <room> [date]      Get today's transcript."
   puts "                                (date is optional, format YYYY/MM/DD)."
+  puts "backup       <dir>  [room]      Backup transcripts to JSON files."
+  puts "                                Backs every room visible by default."
 end
 
 def pop_room_arg
@@ -37,6 +39,52 @@ def stalk(room: Campfire::Room)
   loop do
     msg = ch.receive
     puts msg.body
+  end
+end
+
+def check_backup_dir
+  dir = ARGV[0]?
+
+  if dir.nil? || !File.directory?(dir as String)
+    puts "Invalid backup directory."
+    puts
+    usage
+    exit 1
+  end
+
+  return ARGV.shift
+end
+
+def save_room_transcripts(base_dir, room)
+  rdir = File.join(base_dir, room.id.to_s)
+  Dir.mkdir(rdir) if !File.directory?(rdir)
+
+  counter = 0
+  loop do
+    counter += 1
+    day = (Time.now - counter.day).to_s "%Y/%m/%d"
+    tdir = File.join(rdir, day)
+    Dir.mkdir_p(tdir)
+    tfile = File.join(tdir, "transcript.json")
+
+    if File.exists?(tfile)
+      puts "Transcript from '#{room.name}' (#{day}) already exists. Skipping."
+      next
+    end
+
+    last_found = false
+    File.open(tfile, "w") do |f|
+      t = room.transcript_from(day)
+      if t.nil? || ((JSON.parse(t as String) as Hash)["messages"] as Array).empty?
+        puts "Last transcript from '#{room.name}' found at #{day}."
+        last_found = true
+      else
+        puts "Saving transcript from '#{room.name}' (#{day}) to #{tfile}."
+        f.puts(t)
+      end
+    end
+
+    break if last_found
   end
 end
 
@@ -83,16 +131,25 @@ when "stalk"
   stalk(room as Campfire::Room)
 when "transcript"
   room = pop_room_arg
-    if ARGV[0]?
-      date = ARGV.shift as String
-      t = room.transcript_from(date)
-      if !t
-        puts "Transcript from #{date} not found."
-        exit
-      end
-      puts t
-    else
-      puts room.transcript
+  if ARGV[0]?
+    date = ARGV.shift as String
+    t = room.transcript_from(date)
+    if !t
+      puts "Transcript from #{date} not found."
+      exit
     end
+    puts t
+  else
+    puts room.transcript
+  end
+when "backup"
+  dir = check_backup_dir
+  if ARGV[0]?
+    room = pop_room_arg
+    save_room_transcripts(dir, room)
+  else
+    Campfire::Rooms.each do |room|
+      save_room_transcripts(dir, room)
+    end
+  end
 end
-

@@ -78,6 +78,10 @@ module Campfire
     def self.all
       from_json(Campfire.get("/rooms.json").body).rooms
     end
+
+    def self.each(&block)
+      all.each { |r| yield r }
+    end
   end
 
   class Room 
