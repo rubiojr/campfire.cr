@@ -11,9 +11,9 @@ grep -oh "http[^ ]*\.gif" ~/campfire-logs/* -r | while read -r line; do
   echo -n "Downloading gif $line... "
   if curl -s -L $line > $tmpfile; then
     sha=$(sha1sum $tmpfile | awk '{print $1}')
-    echo "$line $sha" >> $GIFDIR/downloaded
     if [ ! -f "$GIFDIR/$sha.gif" ]; then
       mv $tmpfile $GIFDIR/$sha.gif
+      echo "$line $sha" >> $GIFDIR/downloaded
       echo
     else
       echo "Duplicated!"
