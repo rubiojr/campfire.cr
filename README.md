@@ -31,13 +31,15 @@ AVAILABLE COMMANDS:
 
 say          <room> <text>      Send a message to a room.
 stalk        <room>             Join a room and listen.
+list-rooms                      List available rooms.
 transcript   <room> [date]      Get today's transcript.
                                 (date is optional, format YYYY/MM/DD).
+                                backup       <dir>  [room]      Backup transcripts to JSON files.
 ```
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/campfire.cr/fork )
+1. Fork it ( https://github.com/rubiojr/campfire.cr/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
