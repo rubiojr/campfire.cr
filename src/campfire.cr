@@ -280,7 +280,7 @@ module Campfire
       json = md[1]
     end
 
-    return json
+    json
   end
 
   def self.build_client(domain)
@@ -300,7 +300,7 @@ module Campfire
   end
   
   def self.post(path)
-    return post_body(path, nil)
+    post_body(path, nil)
   end
   
   def self.post_body(path, body)
@@ -327,11 +327,11 @@ module Campfire
   end
 
   def self.load_config
-    data = YAML.load(File.read(File.expand_path("~/.campfire/auth.yml"))) as Hash
-    return data as Hash
+    data = YAML.load(File.read(File.expand_path("~/.campfire/auth.yml")))
+    data as Hash
   end
 
-  def self.config=(config_hash)
+  def self.config=(config_hash: Hash)
     @@config = config_hash
   end
 end
