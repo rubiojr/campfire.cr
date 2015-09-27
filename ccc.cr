@@ -10,6 +10,7 @@ def usage
   puts
   puts "say          <room> <text>      Send a message to a room."
   puts "stalk        <room>             Join a room and listen."
+  puts "list-rooms                      List available rooms."
   puts "transcript   <room> [date]      Get today's transcript."
   puts "                                (date is optional, format YYYY/MM/DD)."
   puts "backup       <dir>  [room]      Backup transcripts to JSON files."
@@ -151,5 +152,9 @@ when "backup"
     Campfire::Rooms.each do |room|
       save_room_transcripts(dir, room)
     end
+  end
+when "list-rooms"
+  Campfire::Rooms.each do |room|
+    puts "#{room.id} #{room.name}"
   end
 end
